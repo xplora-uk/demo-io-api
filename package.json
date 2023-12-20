@@ -7,6 +7,8 @@
     "build:ts": "tsc -p tsconfig.build.json",
     "build": "npm-run-all clean build:ts",
     "clean": "rimraf build",
+    "start": "node build/index.js",
+    "start:ts": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -1,5 +1,7 @@
 // shared types here
 
+import { Knex } from "knex";
+
 export type IProcessEnv = typeof process.env;
 
 export interface IProcessEnvForIoApi extends IProcessEnv {
@@ -37,7 +39,3 @@ export interface IStopableService {
   stop(): Promise<void>;
 }
 export type IBasicService = IStartableService & IStopableService;
-
-export interface IBasicDbService extends IBasicService {
-  
-}

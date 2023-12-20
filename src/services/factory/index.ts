@@ -12,7 +12,7 @@ import { ApiService } from '../api';
 
 export async function factory(penv: IProcessEnvForIoApi = process.env) {
   let   logger = defaultLogger;
-  const env    = new EnvService(penv, logger);
+  const env    = new EnvService(penv, logger, '');
   const config = new ConfigService(env, logger);
 
   // TODO: can change logger based on config
@@ -22,19 +22,30 @@ export async function factory(penv: IProcessEnvForIoApi = process.env) {
   const geoLocationDb = new GeoLocationDb(config, logger);
 
   const payloadAdapter = new MsgPackPayloadAdapter();
-  const apiService     = new ApiService(config, logger);
+  const apiService     = new ApiService(config, logger, coreDb, fcmDb, geoLocationDb);
   const httpWithWs     = new HttpWithWsService(config, logger, payloadAdapter, apiService);
 
   async function start() {
-    await coreDb.start();
-    await fcmDb.start();
-    await geoLocationDb.start();
+    logger.info('starting all services...');
+    return Promise.all([
+      coreDb.start(),
+      fcmDb.start(),
+      geoLocationDb.start(),
+      apiService.start(),
+      httpWithWs.start(),
+    ]).then(() => {
+      logger.info('starting all services... done!');
+    });
   }
 
   async function stop() {
+    logger.info('stopping all services...');
+    await httpWithWs.stop();
+    await apiService.stop();
     await coreDb.stop();
-    await fcmDb.start();
+    await fcmDb.stop();
     await geoLocationDb.stop();
+    logger.info('stopping all services... done!');
   }
 
   return {
