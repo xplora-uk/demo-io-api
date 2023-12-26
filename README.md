@@ -40,7 +40,7 @@ npm run start:ts
 
 ## usage
 
-Check [node-client](./node-client/)
+Check [sample-client](./sample-client/)
 
 ## TODO
 

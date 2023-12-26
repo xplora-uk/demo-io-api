@@ -5,14 +5,14 @@ import { IWsMessageSender } from '../http-with-ws/types';
 
 export type IdType = number;
 export type RidType = string;
-export type IDbDtoScalar = string | number | boolean | null;
+export type IDbDtoScalar = string | number | boolean | null | Object; // Object is for JSON fields
 export type IDbDto = Record<string, IDbDtoScalar>;
 
 export interface IBasicDbService extends IBasicService {
   name: string;
   dbRw(): Knex;
   dbRo(): Knex;
-  repo<T extends IDbDto>(tableName: string): IBasicDbRepo<T>;
+  repo<TDto extends IDbDto>(tableName: string, onCreate: IBasicDbRepo<TDto>): IBasicDbRepo<TDto>;
 }
 
 export interface ISharedSelectOptions {

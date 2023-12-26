@@ -22,11 +22,11 @@ export class BasicDb implements IBasicDbService {
     return this._dbRo;
   }
 
-  repo<TRow extends IDbDto = IDbDto>(tableName: string): IBasicDbRepo<TRow> {
+  repo<TDto extends IDbDto = IDbDto>(tableName: string, onCreate: IBasicDbRepo<TDto> = new BasicDbRepo<TDto>(this, tableName)): IBasicDbRepo<TDto> {
     if (!this._repoCache.has(tableName)) {
-      this._repoCache.set(tableName, new BasicDbRepo<TRow>(this, tableName));
+      this._repoCache.set(tableName, onCreate);
     }
-    return this._repoCache.get(tableName) as IBasicDbRepo<TRow>; // pretending but it's ok
+    return this._repoCache.get(tableName) as IBasicDbRepo<TDto>; // pretending but it's ok
   }
 
   async start() {

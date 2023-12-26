@@ -4,7 +4,8 @@ import { IConfigService } from '../../config/types';
 import { ICoreDb } from './types';
 import { ILoggerService } from '../../logger/types';
 import { BasicDb } from '../BasicDb';
-import { tbl_user } from '../../../generated/db/core';
+import { DtoUser } from '../../../generated/db/core';
+import { UserRepo } from './user-repo';
 
 export class CoreDb extends BasicDb implements ICoreDb {
   protected _dbRw: Knex;
@@ -18,7 +19,8 @@ export class CoreDb extends BasicDb implements ICoreDb {
   }
 
   repoUser() {
-    return this.repo<tbl_user>('tbl_user');
+    const tableName = 'tbl_user';
+    return this.repo<DtoUser>(tableName, new UserRepo(this, tableName));
   }
 
   async start() {

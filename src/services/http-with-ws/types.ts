@@ -11,3 +11,7 @@ export interface IWsMessageProcessor {
 export interface IWsMessageSender {
   send(payload: any): Promise<void>;
 }
+
+export interface IJsonProcessor {
+  (input: { payload: unknown; method: string; url: URL; }): Promise<unknown>;
+}

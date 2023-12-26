@@ -3,7 +3,7 @@ import { IConfigService } from '../config/types';
 import { ICoreDb } from '../db/core/types';
 import { IFcmDb } from '../db/fcm/types';
 import { IGeoLocationDb } from '../db/geolocation/types';
-import { IWsMessageProcessor, IWsMessageSender } from '../http-with-ws/types';
+import { IJsonProcessor, IWsMessageProcessor, IWsMessageSender } from '../http-with-ws/types';
 import { ILoggerService } from '../logger/types';
 
 export class ApiService implements IBasicService, IWsMessageProcessor {
@@ -63,5 +63,14 @@ export class ApiService implements IBasicService, IWsMessageProcessor {
       originalPayload: payload,
       sender,
     });
+  }
+
+  json_processor: IJsonProcessor = async ({ payload, method, url }): Promise<unknown> => {
+    // do something with payload
+    if (url.pathname === '/user') { // example
+      const userId = Number(url.searchParams.get('id') || '0');
+      return this.coreDb.repoUser().selectOne({ criteria: { id: userId } });
+    }
+    return payload;
   }
 }
